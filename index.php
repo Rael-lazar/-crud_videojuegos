@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>hola ha funcionado la parafernalia</h1>
-    <h2>hosdjgsjdfhgjshgj</h2>
+
+
 </body>
 </html>
