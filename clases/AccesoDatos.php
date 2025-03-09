@@ -1,5 +1,7 @@
 <?php 
  include_once 'configuraciones\config.php';
+
+ define('algo','nose');
 class AccesoDatos{
 
 private static $modelo = null; 
@@ -49,23 +51,33 @@ try {
 }
 }
 
+public static function closeModelo(){
+    if (self::$modelo != null){
+        $obj = self::$modelo;
+        
+        $obj->dbh = null;
+        self::$modelo = null;
+    }
+}
+
 function nvideojuegos(){
-    $numero = $this->num_videojuegos->execute();
+    $this->num_videojuegos->execute();
+    $numero = $this->num_videojuegos->fetchColumn();
     return $numero;
 }
 
 function obtenerjuegos(){
     $videojuegos = [];
-    $this->stmt_obtener_juegos->setFetchMode(PDO::FETCH_ASSOC);
+    $this->stmt_obtener_juegos->setFetchMode(PDO::FETCH_CLASS,"videojuegos");
     $this->stmt_obtener_juegos->execute();
     $videojuegos = $this->stmt_obtener_juegos->fetchAll();
     return $videojuegos;
 }
 
 function obtenerjuego($id){
-    $videojuego = "" ;
+    $videojuego = new videojuegos;
     $this->stmt_obtener_juego->bindParam(1,$id);
-    $this->stmt_obtener_juego->setFetchMode(PDO::FETCH_ASSOC);
+    $this->stmt_obtener_juego->setFetchMode(PDO::FETCH_CLASS,"videojuegos");
     $this->stmt_obtener_juego->execute();
     $videojuego = $this->stmt_obtener_juego->fetch();
     return $videojuego;
@@ -110,6 +122,12 @@ function editarjuego($id,$titulo,$año,$genero,$consola,$desarrolladora){
  
  }
 
+
+
+ public function __clone()
+    { 
+        trigger_error('La clonación no permitida', E_USER_ERROR); 
+    }
 
 
 
