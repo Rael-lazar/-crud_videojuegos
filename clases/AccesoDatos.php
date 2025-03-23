@@ -39,7 +39,7 @@ try {
 }
 $this->dbh->setAttribute( PDO::ATTR_EMULATE_PREPARES, FALSE );
 try {
-   $this->stmt_obtener_juegos = $this->dbh->prepare("SELECT * FROM videojuegos");
+   $this->stmt_obtener_juegos = $this->dbh->prepare("SELECT * FROM videojuegos LIMIT ? OFFSET ? ");
    $this->stmt_obtener_juego = $this->dbh->prepare("SELECT * FROm videojuegos where id = ? ");
    $this->stmt_borrar_juego = $this->dbh->prepare("DELETE FROM videojuegos where id = ? ");
    $this->stmt_editar_juego = $this->dbh->prepare("UPDATE videojuegos SET titulo = ?, año = ?, genero = ?, consola = ?, desarrolladora = ? where id = ? ");
@@ -66,8 +66,10 @@ function nvideojuegos(){
     return $numero;
 }
 
-function obtenerjuegos(){
+function obtenerjuegos($limit,$offset){
     $videojuegos = [];
+    $this->stmt_obtener_juegos->bindParam(1,$limit);
+    $this->stmt_obtener_juegos->bindParam(2,$offset);
     $this->stmt_obtener_juegos->setFetchMode(PDO::FETCH_CLASS,"videojuegos");
     $this->stmt_obtener_juegos->execute();
     $videojuegos = $this->stmt_obtener_juegos->fetchAll();
